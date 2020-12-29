@@ -12,18 +12,21 @@ WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
 def chart(event, context):
     data = json.loads(event['body'])
 
-    times = [i / 1000 for i in data['times']]
-
     linestyle = ['.-', '.--', '.:', '--.']
 
     final_scores = {}
 
     fig, ax = plt.subplots()
-    for i, name in enumerate(data['names']):
+    for (i, (name, data_points)) in enumerate(data['scores'].items()):
         style = linestyle[i % len(linestyle)]
-        ax.plot(times, data[name], style, label=name)
 
-        final_scores[name] = data[name][-1]
+        times = [i / 1000 for i in data_points['times']]
+        ax.plot(times, data_points['scores'], style, label=name)
+
+        final_scores[name] = data_points['scores'][-1]
+
+    for timestamp in data['turnChanges']:
+        plt.axvline(x=timestamp / 1000, alpha=0.5, color='grey', linestyle='--', linewidth=0.25)
 
     plt.title('Dominion game score over time')
     plt.xlabel('Time (s since game start)')
