@@ -12,7 +12,7 @@ function load() {
     if (json) {
         game = JSON.parse(json);
 
-        if (game.id !== activeGame.getId()) {
+        if (game.id !== gameId()) {
             reset();
         }
     } else {
@@ -20,8 +20,16 @@ function load() {
     }
 }
 
+function gameId() {
+    if (activeGame) {
+        return activeGame.getId();
+    }
+
+    return -1;
+}
+
 function reset() {
-    game = { id: activeGame.getId(), startTime: new Date().getTime(), scores: {}, turnChanges: [] };
+    game = { id: gameId(), startTime: new Date().getTime(), scores: {}, turnChanges: [] };
     save();
 }
 
@@ -85,6 +93,7 @@ $rootScope.$on('gameFinished', async () => {
         },
         body: gameJson,
     });
+    reset();
 });
 
 $rootScope.$on('gameStarted', () => {
