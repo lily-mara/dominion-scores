@@ -13,8 +13,29 @@ import flask
 
 
 WEBHOOK_URL = os.environ['WEBHOOK_URL']
+BOOKMARKLET = None
 
 app = Flask(__name__)
+DIR = os.path.dirname(__file__)
+
+
+def prepare_bookmarklet():
+    with open(f'{DIR}/game-watch.js') as f:
+        contents = f.read()
+
+        return 'javascript:' + contents
+
+
+@app.route('/')
+def index():
+    global BOOKMARKLET
+    if BOOKMARKLET is None:
+        BOOKMARKLET = prepare_bookmarklet()
+
+    return flask.render_template(
+        'index.html',
+        bookmarklet=BOOKMARKLET,
+    )
 
 
 @app.route('/chart', methods=['POST'])

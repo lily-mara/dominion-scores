@@ -8,8 +8,8 @@ COPY Pipfile Pipfile.lock ./
 
 RUN pipenv install
 
-COPY app.py .
+COPY app app
 
 ARG WEBHOOK_URL=${WEBHOOK_URL}
 
-ENTRYPOINT [ "pipenv", "run", "./app.py" ]
+ENTRYPOINT [ "pipenv", "run", "app/app.py" ]
