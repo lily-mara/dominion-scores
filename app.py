@@ -12,7 +12,7 @@ from flask import Flask, jsonify
 import flask
 
 
-WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
+WEBHOOK_URL = os.environ['WEBHOOK_URL']
 
 app = Flask(__name__)
 
