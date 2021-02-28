@@ -12,10 +12,14 @@ function load() {
     if (json) {
         game = JSON.parse(json);
 
-        if (game.id !== gameId()) {
-            reset();
-        }
+        resetIfGameChanged();
     } else {
+        reset();
+    }
+}
+
+function resetIfGameChanged() {
+    if (game.id !== gameId()) {
         reset();
     }
 }
@@ -54,6 +58,8 @@ const $rootScope = angular.element(document.body).injector().get('$rootScope');
 
 let turn;
 $rootScope.$on('newTurn', (_, turnData) => {
+    resetIfGameChanged();
+
     if (turn !== turnData.turnNumber) {
         turn = turnData.turnNumber;
 
@@ -63,6 +69,8 @@ $rootScope.$on('newTurn', (_, turnData) => {
 });
 
 $rootScope.$on('counterChange', (_, counterData) => {
+    resetIfGameChanged();
+
     const counter = activeGame.state.counters[counterData.index];
 
     if (counter && counter.counterName && counter.counterName.name === 'Points') {
