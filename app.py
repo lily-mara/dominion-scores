@@ -5,12 +5,19 @@ from io import BytesIO
 
 import requests
 import matplotlib.pyplot as plt
+import waitress
+from flask import Flask, jsonify
+import flask
+
 
 WEBHOOK_URL = os.environ.get('WEBHOOK_URL')
 
+app = Flask(__name__)
 
-def chart(event, context):
-    data = json.loads(event['body'])
+
+@app.route('/chart', methods=['POST'])
+def chart():
+    data = flask.request.get_json()
 
     linestyle = ['.-', '.--', '.:', '--.']
 
@@ -51,7 +58,15 @@ def chart(event, context):
         },
     )
 
-    return {
-        'statusCode': 200,
-        'body': 'ok',
-    }
+    return 'ok'
+
+
+@app.after_request
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    return response
+
+
+if __name__ == "__main__":
+    waitress.serve(app, listen='*:80')
