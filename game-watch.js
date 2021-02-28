@@ -1,7 +1,7 @@
 let game;
 
 const KEY = '__dominionGame.state';
-const URL = 'https://56b89pgxxk.execute-api.us-east-1.amazonaws.com/dev/chart';
+const URL = 'https://dominion-scores.app.natemara.com/chart';
 
 function save() {
     localStorage.setItem(KEY, JSON.stringify(game));
